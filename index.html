@@ -452,7 +452,7 @@
             global turtle_data
             try:
                 import urllib.request
-                response = urllib.request.urlopen('tulip_data.json')
+                response = urllib.request.urlopen('assets/data.json')
                 data = response.read()
                 if isinstance(data, bytes):
                     data = data.decode('utf-8')
