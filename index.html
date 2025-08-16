@@ -193,21 +193,24 @@
             }
 
             .controls {
-                flex-direction: column;
+                flex-direction: row;
                 align-items: center;
-                gap: 15px;
+                gap: 10px;
+                justify-content: center;
+                flex-wrap: wrap;
             }
 
             .btn {
-                width: 100%;
-                max-width: 250px;
-                padding: 15px 20px;
-                font-size: 16px;
-                min-width: auto;
+                width: auto;
+                min-width: 80px;
+                padding: 12px 15px;
+                font-size: 14px;
+                flex: 1;
+                max-width: 120px;
             }
 
             .speed-control {
-                flex-direction: column;
+                flex-direction: row;
                 gap: 15px;
                 padding: 20px;
                 align-items: center;
@@ -215,10 +218,17 @@
 
             .speed-control label {
                 font-size: 16px;
+                min-width: 80px;
+            }
+
+            .speed-control input[type="range"] {
+                flex: 1;
+                min-width: 200px;
             }
 
             .speed-value {
                 font-size: 20px;
+                min-width: 30px;
             }
 
             #turtleCanvas {
@@ -246,24 +256,43 @@
                 letter-spacing: 1px;
             }
 
+            .controls {
+                flex-direction: row;
+                align-items: center;
+                gap: 8px;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+
             .btn {
-                width: 100%;
-                max-width: 200px;
-                padding: 12px 15px;
-                font-size: 14px;
+                width: auto;
+                min-width: 70px;
+                padding: 10px 12px;
+                font-size: 12px;
+                flex: 1;
+                max-width: 100px;
             }
 
             .speed-control {
+                flex-direction: row;
                 padding: 15px;
-                gap: 12px;
+                gap: 10px;
+                align-items: center;
             }
 
             .speed-control label {
                 font-size: 14px;
+                min-width: 70px;
+            }
+
+            .speed-control input[type="range"] {
+                flex: 1;
+                min-width: 150px;
             }
 
             .speed-value {
                 font-size: 18px;
+                min-width: 25px;
             }
 
             #turtleCanvas {
@@ -329,23 +358,42 @@
                 margin-bottom: 10px;
             }
 
+            .controls {
+                flex-direction: row;
+                align-items: center;
+                gap: 5px;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+
             .btn {
-                padding: 10px 15px;
-                font-size: 12px;
-                min-width: 100px;
+                padding: 8px 10px;
+                font-size: 11px;
+                min-width: 60px;
+                max-width: 80px;
+                flex: 1;
             }
 
             .speed-control {
+                flex-direction: row;
                 padding: 10px;
                 gap: 8px;
+                align-items: center;
             }
 
             .speed-control label {
                 font-size: 12px;
+                min-width: 60px;
+            }
+
+            .speed-control input[type="range"] {
+                flex: 1;
+                min-width: 120px;
             }
 
             .speed-value {
                 font-size: 16px;
+                min-width: 20px;
             }
 
             #turtleCanvas {
@@ -562,5 +610,10 @@
         document['status'].textContent = "Cargando datos de amor..."
         load_data()
     </script>
+    
+    <!-- Créditos -->
+    <div style="text-align: center; margin-top: 30px; padding: 20px; color: rgba(255, 255, 255, 0.7); font-family: 'Outfit', sans-serif; font-size: 14px;">
+        by <a href="https://github.com/Sandreke" target="_blank" style="color: #ff1493; text-decoration: none; font-weight: bold;">Sandreke</a>
+    </div>
 </body>
 </html>
