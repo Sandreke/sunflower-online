@@ -2,7 +2,7 @@
 
 A beautiful, interactive sunflower drawing that brings Python's turtle graphics to the web using Brython.
 
-![Sunflower Online Screenshot](screenshot.png)
+<img src="https://github.com/user-attachments/assets/fb4b10b3-5f33-47e8-8ad6-c93d5c05e3c9" width=50% height=50%>
 
 ## ✨ Features
 
@@ -28,11 +28,3 @@ A beautiful, interactive sunflower drawing that brings Python's turtle graphics 
 - **Python Runtime**: Brython
 - **Graphics**: Custom turtle graphics implementation
 - **Design**: Responsive, minimalist UI with Outfit font
-
-## 👨‍💻 Author
-
-Created by [Sandreke](https://github.com/Sandreke)
-
----
-
-*Made with ❤️ and Python*
