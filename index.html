@@ -38,8 +38,8 @@
         }
 
         .dog-gif {
-            width: 250px;
-            height: 250px;
+            width: 375px;
+            height: 375px;
             object-fit: cover;
             border-radius: 15px;
             border: 5px solid #FFA216;
@@ -214,8 +214,7 @@
         .credits {
             position: fixed;
             bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
+            right: 20px;
             font-family: 'Outfit', sans-serif;
             font-weight: 400;
             font-size: 0.7rem;
@@ -278,8 +277,8 @@
 
         @media (max-width: 768px) {
             .dog-gif {
-                width: 200px;
-                height: 200px;
+                width: 300px;
+                height: 300px;
                 margin-bottom: 5px;
             }
             
@@ -314,13 +313,14 @@
             .credits {
                 font-size: 0.8rem;
                 bottom: 15px;
+                right: 15px;
             }
         }
 
         @media (max-width: 480px) {
             .dog-gif {
-                width: 160px;
-                height: 160px;
+                width: 240px;
+                height: 240px;
                 margin-bottom: 3px;
             }
             
@@ -355,13 +355,14 @@
             .credits {
                 font-size: 0.75rem;
                 bottom: 10px;
+                right: 10px;
             }
         }
 
         @media (max-width: 320px) {
             .dog-gif {
-                width: 130px;
-                height: 130px;
+                width: 195px;
+                height: 195px;
                 margin-bottom: 2px;
             }
             
@@ -463,8 +464,8 @@
             """Mueve la tortuga a una posición específica"""
             global turtle_x, turtle_y
             
-            # Escalar coordenadas para que la flor sea más grande en diferentes dispositivos
-            scale_factor = min(canvas_width, canvas_height) / 200
+            # Escalar coordenadas para que la flor sea 50% más grande
+            scale_factor = min(canvas_width, canvas_height) / 133
             scaled_x = canvas_width // 2 + x * scale_factor
             scaled_y = canvas_height // 2 - y * scale_factor
             
@@ -529,7 +530,7 @@
             
             # Dibujar semilla circular pequeña con borde negro para distinguir cada semilla
             ctx.beginPath()
-            ctx.arc(0, 0, 3, 0, 2 * math.pi)  # Círculo más grande (radio 3)
+            ctx.arc(0, 0, 4, 0, 2 * math.pi)  # Círculo más grande (radio 4) para flor agrandada
             
             # Relleno marrón
             ctx.fillStyle = '#8B4513'  # Marrón más claro para mejor visibilidad
@@ -557,15 +558,15 @@
                     return
                 
                 # Calcular posición usando espiral de Fibonacci y ángulo dorado
-                # Radio muy pequeño para confinar las semillas solo al círculo central
-                r = 0.7 * math.sqrt(current_seed)
+                # Radio ajustado para mantener semillas en el centro de la flor agrandada
+                r = 0.47 * math.sqrt(current_seed)
                 theta = current_seed * 137.508 * (math.pi / 180)
                 x = r * math.cos(theta)
                 y = r * math.sin(theta)
                 
                 # Mover a la posición sin dibujar, ajustando para centrar en el círculo negro
                 pen_up()
-                goto(x, y - 8)  # Ajustar hacia abajo para centrar en el círculo negro
+                goto(x, y - 5.5)  # Ajustar hacia abajo para centrar en el círculo negro
                 set_heading(current_seed * 137.508)
                 pen_down()
                 
