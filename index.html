@@ -34,17 +34,23 @@
             width: 100%;
             max-width: 1000px;
             padding: 40px 20px;
+            min-height: 100vh;
         }
 
-        h1 {
-            font-family: 'Outfit', sans-serif;
-            font-weight: 300;
-            font-size: 2.5rem;
-            text-align: center;
-            margin-bottom: 30px;
-            letter-spacing: 2px;
-            color: #ffffff;
-            transition: opacity 0.5s ease;
+        .dog-gif {
+            width: 250px;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 15px;
+            border: 5px solid #FFA216;
+            box-shadow: 0 8px 25px rgba(255, 162, 22, 0.5);
+            transition: all 0.3s ease;
+            margin-bottom: 5px;
+        }
+
+        .dog-gif:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 162, 22, 0.5);
         }
 
         .initial-interface {
@@ -134,13 +140,12 @@
             padding: 18px 45px;
             margin: 30px 0;
             background: linear-gradient(135deg, #FFA216, #FF8C00);
-            color: #ffffff;
+            color: #000000;
             border: none;
-            border-radius: 35px;
+            border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s ease;
             letter-spacing: 2px;
-            text-transform: uppercase;
             box-shadow: 0 6px 20px rgba(255, 162, 22, 0.4);
         }
 
@@ -213,7 +218,7 @@
             transform: translateX(-50%);
             font-family: 'Outfit', sans-serif;
             font-weight: 400;
-            font-size: 0.9rem;
+            font-size: 0.7rem;
             color: rgba(255, 255, 255, 0.7);
             z-index: 1000;
         }
@@ -272,10 +277,10 @@
         }
 
         @media (max-width: 768px) {
-            h1 {
-                font-size: 2rem;
-                margin-bottom: 20px;
-                letter-spacing: 1px;
+            .dog-gif {
+                width: 200px;
+                height: 200px;
+                margin-bottom: 5px;
             }
             
             .container {
@@ -313,9 +318,10 @@
         }
 
         @media (max-width: 480px) {
-            h1 {
-                font-size: 1.8rem;
-                margin-bottom: 15px;
+            .dog-gif {
+                width: 160px;
+                height: 160px;
+                margin-bottom: 3px;
             }
             
             button {
@@ -353,8 +359,10 @@
         }
 
         @media (max-width: 320px) {
-            h1 {
-                font-size: 1.5rem;
+            .dog-gif {
+                width: 130px;
+                height: 130px;
+                margin-bottom: 2px;
             }
             
             button {
@@ -380,9 +388,9 @@
 <body onload="brython()">
     <!-- Interfaz inicial -->
     <div class="initial-interface" id="initialInterface">
-        <h1>🌻</h1>
+        <img src="dog.gif" alt="Perro con girasol" class="dog-gif">
         
-        <button onclick="startDrawing()">DIBUJAR :)</button>
+        <button onclick="startDrawing()">Ver sorpresa 🌻</button>
         
         <div class="speed-control">
             <div class="speed-label">Velocidad:</div>
@@ -396,7 +404,7 @@
         <div class="canvas-container">
             <canvas id="turtleCanvas" width="1000" height="1000"></canvas>
         </div>
-        <div class="smile-text" id="smileText">smile :)</div>
+        <div class="smile-text" id="smileText">para la flor más linda :)</div>
     </div>
 
     <!-- Créditos -->
@@ -413,6 +421,7 @@
         drawing_active = False
         current_petal = 0
         current_segment = 0
+        current_seed = 0
         drawing_timeout = None
         drawing_speed = 5  # Velocidad por defecto (1-10)
         
@@ -454,8 +463,8 @@
             """Mueve la tortuga a una posición específica"""
             global turtle_x, turtle_y
             
-            # Escalar coordenadas para que quepan en el canvas (más grande)
-            scale_factor = min(canvas_width, canvas_height) / 300
+            # Escalar coordenadas para que la flor sea más grande en diferentes dispositivos
+            scale_factor = min(canvas_width, canvas_height) / 200
             scaled_x = canvas_width // 2 + x * scale_factor
             scaled_y = canvas_height // 2 - y * scale_factor
             
@@ -507,17 +516,94 @@
             # Actualizar heading (turtle gira según el extent)
             turtle_heading += extent
         
+        def stamp():
+            """Dibuja una semilla circular en la posición actual - igual que turtle.stamp()"""
+            global turtle_x, turtle_y, turtle_heading
+            
+            # Guardar el estado actual
+            ctx.save()
+            
+            # Mover al centro de la semilla
+            ctx.translate(turtle_x, turtle_y)
+            ctx.rotate(math.radians(turtle_heading))
+            
+            # Dibujar semilla circular pequeña con borde negro para distinguir cada semilla
+            ctx.beginPath()
+            ctx.arc(0, 0, 3, 0, 2 * math.pi)  # Círculo más grande (radio 3)
+            
+            # Relleno marrón
+            ctx.fillStyle = '#8B4513'  # Marrón más claro para mejor visibilidad
+            ctx.fill()
+            
+            # Borde negro para distinguir cada semilla
+            ctx.strokeStyle = 'black'
+            ctx.lineWidth = 1
+            ctx.stroke()
+            
+            # Restaurar el estado
+            ctx.restore()
+        
+        def draw_center():
+            """Dibuja el centro del girasol con 140 semillas"""
+            global current_seed, drawing_active, drawing_timeout
+            
+            try:
+                if not drawing_active:
+                    return
+                
+                if current_seed >= 140:
+                    drawing_active = False
+                    show_smile_text()
+                    return
+                
+                # Calcular posición usando espiral de Fibonacci y ángulo dorado
+                # Radio muy pequeño para confinar las semillas solo al círculo central
+                r = 0.7 * math.sqrt(current_seed)
+                theta = current_seed * 137.508 * (math.pi / 180)
+                x = r * math.cos(theta)
+                y = r * math.sin(theta)
+                
+                # Mover a la posición sin dibujar, ajustando para centrar en el círculo negro
+                pen_up()
+                goto(x, y - 8)  # Ajustar hacia abajo para centrar en el círculo negro
+                set_heading(current_seed * 137.508)
+                pen_down()
+                
+                # Dibujar la semilla
+                stamp()
+                
+                current_seed += 1
+                
+                # Siguiente semilla con delay basado en velocidad
+                if drawing_active:
+                    delay = max(10, 100 - (drawing_speed * 9))
+                    drawing_timeout = set_timeout(draw_center, delay)
+                    
+            except Exception as e:
+                drawing_active = False
+        
+        def set_heading(angle):
+            """Establece la dirección de la tortuga"""
+            global turtle_heading
+            turtle_heading = angle
+        
         def draw_next():
             """Dibuja el siguiente segmento del girasol"""
-            global current_petal, current_segment, drawing_active, drawing_timeout
+            global current_petal, current_segment, drawing_active, drawing_timeout, current_seed
             
             try:
                 if not drawing_active:
                     return
                 
                 if current_petal >= 16:
-                    drawing_active = False
-                    show_smile_text()
+                    # Completar los pétalos y empezar el centro
+                    circle(40, 24)
+                    current_seed = 0
+                    # Cambiar a color negro para el contorno del centro (como en el código original)
+                    set_color('black')
+                    # Configurar forma circular y tamaño (shape('circle'), shapesize(0.5))
+                    # Iniciar dibujo del centro
+                    set_timeout(draw_center, 100)
                     return
                 
                 if current_segment >= 18:
@@ -531,7 +617,7 @@
                     set_timeout(draw_next, delay)
                     return
                 
-                # Dibujar el siguiente segmento del pétalo actual - CÓDIGO EXACTO DE 03.py
+                # Dibujar el siguiente segmento del pétalo actual - CÓDIGO EXACTO DE 01.py
                 set_color('#FFA216')
                 right(90)
                 circle(150-current_segment*6, 90)
@@ -554,7 +640,7 @@
         
         def start_drawing():
             """Inicia el dibujo del girasol"""
-            global drawing_active, current_petal, current_segment, drawing_timeout, drawing_speed
+            global drawing_active, current_petal, current_segment, current_seed, drawing_timeout, drawing_speed
             
             # Obtener velocidad del slider
             speed_slider = document['speedSlider']
@@ -580,6 +666,7 @@
             drawing_active = True
             current_petal = 0
             current_segment = 0
+            current_seed = 0
             clear_canvas()
             
             # Posición inicial ajustada para centrado vertical
@@ -598,7 +685,7 @@
             smile_element.classList.add('visible')
             
             # Dividir el texto en letras
-            text = "smile :)"
+            text = "para la flor más linda :)"
             smile_element.innerHTML = ""
             
             for i, char in enumerate(text):
