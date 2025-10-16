@@ -455,7 +455,7 @@
     <!-- Interfaz de dibujo -->
     <div class="drawing-interface" id="drawingInterface">
         <div class="canvas-container">
-            <canvas id="turtleCanvas" width="1200" height="1200"></canvas>
+            <canvas id="turtleCanvas" width="1800" height="1800"></canvas>
         </div>
         <div class="smile-text" id="smileText">porque sí, para ti :)</div>
     </div>
@@ -481,8 +481,8 @@
         # Canvas setup
         canvas = document['turtleCanvas']
         ctx = canvas.getContext('2d')
-        canvas_width = 1200
-        canvas_height = 1200
+        canvas_width = 1800
+        canvas_height = 1800
         
         # Turtle variables
         turtle_x = canvas_width // 2
@@ -516,8 +516,8 @@
             """Mueve la tortuga a una posición específica"""
             global turtle_x, turtle_y
             
-            # Escalar coordenadas para que la flor sea 100% más grande (50% adicional)
-            scale_factor = min(canvas_width, canvas_height) / 89
+            # Escalar coordenadas para que la flor sea 100% más grande (el doble de tamaño)
+            scale_factor = min(canvas_width, canvas_height) / 67
             scaled_x = canvas_width // 2 + x * scale_factor
             scaled_y = canvas_height // 2 - y * scale_factor
             
@@ -582,7 +582,7 @@
             
             # Dibujar semilla circular pequeña con borde negro para distinguir cada semilla
             ctx.beginPath()
-            ctx.arc(0, 0, 6, 0, 2 * math.pi)  # Círculo más grande (radio 6) para flor más grande
+            ctx.arc(0, 0, 8, 0, 2 * math.pi)  # Círculo más grande (radio 8) para flor 100% más grande
             
             # Relleno marrón
             ctx.fillStyle = '#8B4513'  # Marrón más claro para mejor visibilidad
@@ -610,8 +610,8 @@
                     return
                 
                 # Calcular posición usando espiral de Fibonacci y ángulo dorado
-                # Radio ajustado para mantener semillas en el centro de la flor más grande
-                r = 0.31 * math.sqrt(current_seed)
+                # Radio ajustado para mantener semillas en el centro de la flor 100% más grande
+                r = 0.21 * math.sqrt(current_seed)
                 theta = current_seed * 137.508 * (math.pi / 180)
                 x = r * math.cos(theta)
                 y = r * math.sin(theta)
