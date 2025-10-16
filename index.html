@@ -98,6 +98,16 @@
             opacity: 1;
         }
 
+        .matrix-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+            pointer-events: none;
+        }
+
         #output {
             font-family: 'Outfit', sans-serif;
             font-weight: 400;
@@ -136,12 +146,14 @@
 
         #turtleCanvas {
             border: none;
-            background: #000000;
+            background: transparent;
             border-radius: 0;
-            max-width: 95vw;
-            max-height: 95vh;
+            max-width: 100vw;
+            max-height: 100vh;
             width: auto;
             height: auto;
+            position: relative;
+            z-index: 2;
         }
 
         button {
@@ -281,7 +293,7 @@
             text-align: center;
             opacity: 0;
             transition: opacity 0.5s ease, transform 0.5s ease;
-            z-index: 10;
+            z-index: 3;
         }
 
         .smile-text.visible {
@@ -306,8 +318,8 @@
         /* Responsive */
         @media (max-width: 1024px) {
             #turtleCanvas {
-                max-width: 95vw;
-                max-height: 95vh;
+                max-width: 90vw;
+                max-height: 90vh;
             }
         }
 
@@ -342,8 +354,8 @@
             }
             
             #turtleCanvas {
-                max-width: 98vw;
-                max-height: 75vh;
+                max-width: 95vw;
+                max-height: 70vh;
             }
             
             .smile-text {
@@ -390,7 +402,7 @@
             
             #turtleCanvas {
                 max-width: 98vw;
-                max-height: 65vh;
+                max-height: 60vh;
             }
             
             .smile-text {
@@ -427,8 +439,8 @@
             }
             
             #turtleCanvas {
-                max-width: 98vw;
-                max-height: 60vh;
+                max-width: 100vw;
+                max-height: 55vh;
             }
             
             .smile-text {
@@ -454,8 +466,9 @@
 
     <!-- Interfaz de dibujo -->
     <div class="drawing-interface" id="drawingInterface">
+        <canvas id="matrixCanvas" class="matrix-background"></canvas>
         <div class="canvas-container">
-            <canvas id="turtleCanvas" width="1800" height="1800"></canvas>
+            <canvas id="turtleCanvas" width="1000" height="1000"></canvas>
         </div>
         <div class="smile-text" id="smileText">porque sí, para ti :)</div>
     </div>
@@ -481,8 +494,8 @@
         # Canvas setup
         canvas = document['turtleCanvas']
         ctx = canvas.getContext('2d')
-        canvas_width = 1800
-        canvas_height = 1800
+        canvas_width = 1000
+        canvas_height = 1000
         
         # Turtle variables
         turtle_x = canvas_width // 2
@@ -490,14 +503,9 @@
         turtle_heading = 0
         turtle_pen_down = True
         
-        # Escala global para el tamaño de la flor (aplicada a radios de circle())
-        circle_scale_multiplier = 1.0  # sin escalado extra; usaremos goto() y CSS
-        
         def clear_canvas():
-            """Limpia el canvas y lo pinta de negro"""
+            """Limpia el canvas (fondo transparente para mostrar matrix effect)"""
             ctx.clearRect(0, 0, canvas_width, canvas_height)
-            ctx.fillStyle = 'black'
-            ctx.fillRect(0, 0, canvas_width, canvas_height)
         
         def set_color(color_str):
             """Establece el color del trazo"""
@@ -519,8 +527,8 @@
             """Mueve la tortuga a una posición específica"""
             global turtle_x, turtle_y
             
-            # Escalar coordenadas para que la flor sea 50% más grande del tamaño original
-            scale_factor = min(canvas_width, canvas_height) / 30
+            # Escalar coordenadas para que la flor sea 50% más grande
+            scale_factor = min(canvas_width, canvas_height) / 133
             scaled_x = canvas_width // 2 + x * scale_factor
             scaled_y = canvas_height // 2 - y * scale_factor
             
@@ -553,9 +561,8 @@
             # En turtle, circle() dibuja hacia la izquierda desde la dirección actual
             # El centro del círculo está a 90 grados a la izquierda de la tortuga
             center_angle = turtle_heading + 90
-            scaled_radius = radius * circle_scale_multiplier
-            center_x = turtle_x + scaled_radius * math.cos(math.radians(center_angle))
-            center_y = turtle_y + scaled_radius * math.sin(math.radians(center_angle))
+            center_x = turtle_x + radius * math.cos(math.radians(center_angle))
+            center_y = turtle_y + radius * math.sin(math.radians(center_angle))
             
             # Ángulo inicial desde el centro del círculo hasta la posición actual de la tortuga
             start_angle = math.radians(turtle_heading - 90)
@@ -563,12 +570,12 @@
             
             # Dibujar el arco
             ctx.beginPath()
-            ctx.arc(center_x, center_y, scaled_radius, start_angle, end_angle)
+            ctx.arc(center_x, center_y, radius, start_angle, end_angle)
             ctx.stroke()
             
             # Actualizar posición de la tortuga (turtle se mueve al final del arco)
-            turtle_x = center_x + scaled_radius * math.cos(end_angle)
-            turtle_y = center_y + scaled_radius * math.sin(end_angle)
+            turtle_x = center_x + radius * math.cos(end_angle)
+            turtle_y = center_y + radius * math.sin(end_angle)
             
             # Actualizar heading (turtle gira según el extent)
             turtle_heading += extent
@@ -586,7 +593,7 @@
             
             # Dibujar semilla circular pequeña con borde negro para distinguir cada semilla
             ctx.beginPath()
-            ctx.arc(0, 0, 8, 0, 2 * math.pi)  # Círculo más grande (radio 8) para flor 100% más grande
+            ctx.arc(0, 0, 4, 0, 2 * math.pi)  # Círculo más grande (radio 4) para flor agrandada
             
             # Relleno marrón
             ctx.fillStyle = '#8B4513'  # Marrón más claro para mejor visibilidad
@@ -614,8 +621,8 @@
                     return
                 
                 # Calcular posición usando espiral de Fibonacci y ángulo dorado
-                # Radio ajustado para mantener semillas en el centro de la flor 50% más grande del original
-                r = 0.10 * math.sqrt(current_seed)
+                # Radio ajustado para mantener semillas en el centro de la flor agrandada
+                r = 0.47 * math.sqrt(current_seed)
                 theta = current_seed * 137.508 * (math.pi / 180)
                 x = r * math.cos(theta)
                 y = r * math.sin(theta)
@@ -717,6 +724,8 @@
             # Esperar un poco y luego mostrar la interfaz de dibujo
             def show_drawing_interface():
                 drawing_interface.classList.add('active')
+                # Iniciar efecto matrix después de mostrar la interfaz
+                set_timeout(lambda: window.startMatrixEffect(), 100)
             
             set_timeout(show_drawing_interface, 400)  # Medio segundo de delay
             
@@ -774,6 +783,113 @@
         # Inicialización
         clear_canvas()
         update_speed_display()  # Mostrar valor inicial de velocidad
+    </script>
+
+    <script>
+        // Matrix Rain Effect con emojis de girasol 🌻
+        let matrixCanvas, matrixCtx;
+        let matrixColumns = [];
+        let matrixAnimationId;
+        
+        function initMatrixEffect() {
+            matrixCanvas = document.getElementById('matrixCanvas');
+            matrixCtx = matrixCanvas.getContext('2d');
+            
+            // Configurar canvas para pantalla completa
+            matrixCanvas.width = window.innerWidth;
+            matrixCanvas.height = window.innerHeight;
+            
+            // Configurar fuente para emojis
+            matrixCtx.font = '20px Arial';
+            matrixCtx.textAlign = 'center';
+            
+            // Inicializar columnas
+            const fontSize = 20;
+            const columnWidth = fontSize;
+            const numColumns = Math.floor(matrixCanvas.width / columnWidth);
+            
+            for (let i = 0; i < numColumns; i++) {
+                matrixColumns[i] = {
+                    x: i * columnWidth + columnWidth / 2,
+                    y: Math.random() * matrixCanvas.height,
+                    speed: Math.random() * 2 + 1,
+                    chars: [],
+                    charCount: Math.floor(Math.random() * 20) + 5
+                };
+                
+                // Generar caracteres para esta columna
+                for (let j = 0; j < matrixColumns[i].charCount; j++) {
+                    matrixColumns[i].chars.push({
+                        char: '🌻',
+                        opacity: Math.random()
+                    });
+                }
+            }
+        }
+        
+        function drawMatrixEffect() {
+            // Limpiar canvas con fondo negro semi-transparente para efecto de rastro
+            matrixCtx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            matrixCtx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
+            
+            matrixColumns.forEach(column => {
+                column.chars.forEach((charObj, index) => {
+                    // Calcular posición Y para este carácter
+                    const charY = column.y - (index * 25);
+                    
+                    // Solo dibujar si está en pantalla
+                    if (charY > -25 && charY < matrixCanvas.height + 25) {
+                        // Calcular opacidad (más brillante arriba)
+                        const opacity = Math.max(0.1, 1 - (index / column.charCount));
+                        
+                        // Color amarillo para los girasoles
+                        matrixCtx.fillStyle = `rgba(255, 162, 22, ${opacity})`;
+                        
+                        // Dibujar emoji
+                        matrixCtx.fillText(charObj.char, column.x, charY);
+                        
+                        // Agregar efecto de brillo
+                        if (opacity > 0.7) {
+                            matrixCtx.shadowColor = '#FFA216';
+                            matrixCtx.shadowBlur = 10;
+                            matrixCtx.fillText(charObj.char, column.x, charY);
+                            matrixCtx.shadowBlur = 0;
+                        }
+                    }
+                });
+                
+                // Mover columna hacia abajo
+                column.y += column.speed;
+                
+                // Reiniciar columna cuando sale de pantalla
+                if (column.y > matrixCanvas.height + column.charCount * 25) {
+                    column.y = -column.charCount * 25;
+                    column.speed = Math.random() * 2 + 1;
+                }
+            });
+            
+            matrixAnimationId = requestAnimationFrame(drawMatrixEffect);
+        }
+        
+        function startMatrixEffect() {
+            initMatrixEffect();
+            drawMatrixEffect();
+        }
+        
+        function stopMatrixEffect() {
+            if (matrixAnimationId) {
+                cancelAnimationFrame(matrixAnimationId);
+            }
+        }
+        
+        // Redimensionar canvas cuando cambie el tamaño de ventana
+        window.addEventListener('resize', () => {
+            if (matrixCanvas) {
+                matrixCanvas.width = window.innerWidth;
+                matrixCanvas.height = window.innerHeight;
+                initMatrixEffect();
+            }
+        });
     </script>
 
     <script>
