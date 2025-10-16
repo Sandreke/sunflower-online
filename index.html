@@ -491,7 +491,7 @@
         turtle_pen_down = True
         
         # Escala global para el tamaño de la flor (aplicada a radios de circle())
-        circle_scale_multiplier = 2.0  # 2x para que la flor sea 100% más grande
+        circle_scale_multiplier = 1.0  # sin escalado extra; usaremos goto() y CSS
         
         def clear_canvas():
             """Limpia el canvas y lo pinta de negro"""
@@ -519,8 +519,8 @@
             """Mueve la tortuga a una posición específica"""
             global turtle_x, turtle_y
             
-            # Escalar coordenadas para que la flor sea 100% más grande (el doble de tamaño)
-            scale_factor = min(canvas_width, canvas_height) / 67
+            # Escalar coordenadas para que la flor sea más grande (doble de tamaño)
+            scale_factor = min(canvas_width, canvas_height) / 60
             scaled_x = canvas_width // 2 + x * scale_factor
             scaled_y = canvas_height // 2 - y * scale_factor
             
