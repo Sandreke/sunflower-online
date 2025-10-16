@@ -851,17 +851,17 @@
                     
                     // Solo dibujar si está en pantalla
                     if (charY > -12 && charY < matrixCanvas.height + 12) {
-                        // Calcular opacidad (más brillante arriba, pero más tenue)
-                        const opacity = Math.max(0.05, (1 - (index / column.charCount)) * 0.6);
+                        // Calcular opacidad (más brillante arriba, pero limitada a 30%)
+                        const opacity = Math.max(0.05, (1 - (index / column.charCount)) * 0.3);
                         
-                        // Color amarillo más tenue para los girasoles
+                        // Color amarillo del tema para los girasoles
                         matrixCtx.fillStyle = `rgba(255, 162, 22, ${opacity})`;
                         
                         // Dibujar emoji
                         matrixCtx.fillText(charObj.char, column.x, charY);
                         
                         // Efecto de brillo más sutil
-                        if (opacity > 0.4) {
+                        if (opacity > 0.2) {
                             matrixCtx.shadowColor = '#FFA216';
                             matrixCtx.shadowBlur = 5;
                             matrixCtx.fillText(charObj.char, column.x, charY);
