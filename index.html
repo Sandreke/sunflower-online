@@ -108,6 +108,17 @@
             pointer-events: none;
         }
 
+        .matrix-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 1.5;
+            pointer-events: none;
+        }
+
         #output {
             font-family: 'Outfit', sans-serif;
             font-weight: 400;
@@ -467,6 +478,7 @@
     <!-- Interfaz de dibujo -->
     <div class="drawing-interface" id="drawingInterface">
         <canvas id="matrixCanvas" class="matrix-background"></canvas>
+        <div class="matrix-overlay"></div>
         <div class="canvas-container">
             <canvas id="turtleCanvas" width="1000" height="1000"></canvas>
         </div>
@@ -799,22 +811,22 @@
             matrixCanvas.width = window.innerWidth;
             matrixCanvas.height = window.innerHeight;
             
-            // Configurar fuente para emojis
-            matrixCtx.font = '20px Arial';
+            // Configurar fuente para emojis (50% más pequeños)
+            matrixCtx.font = '10px Arial';
             matrixCtx.textAlign = 'center';
             
-            // Inicializar columnas
-            const fontSize = 20;
-            const columnWidth = fontSize;
+            // Inicializar columnas (triple separación)
+            const fontSize = 10;
+            const columnWidth = fontSize * 3; // Triple separación
             const numColumns = Math.floor(matrixCanvas.width / columnWidth);
             
             for (let i = 0; i < numColumns; i++) {
                 matrixColumns[i] = {
                     x: i * columnWidth + columnWidth / 2,
-                    y: Math.random() * matrixCanvas.height,
+                    y: Math.random() * matrixCanvas.height * 2 - matrixCanvas.height, // Variación en inicio
                     speed: Math.random() * 2 + 1,
                     chars: [],
-                    charCount: Math.floor(Math.random() * 20) + 5
+                    charCount: Math.floor(Math.random() * 10) + 3 // 50% menos girasoles por columna
                 };
                 
                 // Generar caracteres para esta columna
@@ -834,24 +846,24 @@
             
             matrixColumns.forEach(column => {
                 column.chars.forEach((charObj, index) => {
-                    // Calcular posición Y para este carácter
-                    const charY = column.y - (index * 25);
+                    // Calcular posición Y para este carácter (espaciado ajustado para emojis más pequeños)
+                    const charY = column.y - (index * 12);
                     
                     // Solo dibujar si está en pantalla
-                    if (charY > -25 && charY < matrixCanvas.height + 25) {
-                        // Calcular opacidad (más brillante arriba)
-                        const opacity = Math.max(0.1, 1 - (index / column.charCount));
+                    if (charY > -12 && charY < matrixCanvas.height + 12) {
+                        // Calcular opacidad (más brillante arriba, pero más tenue)
+                        const opacity = Math.max(0.05, (1 - (index / column.charCount)) * 0.6);
                         
-                        // Color amarillo para los girasoles
+                        // Color amarillo más tenue para los girasoles
                         matrixCtx.fillStyle = `rgba(255, 162, 22, ${opacity})`;
                         
                         // Dibujar emoji
                         matrixCtx.fillText(charObj.char, column.x, charY);
                         
-                        // Agregar efecto de brillo
-                        if (opacity > 0.7) {
+                        // Efecto de brillo más sutil
+                        if (opacity > 0.4) {
                             matrixCtx.shadowColor = '#FFA216';
-                            matrixCtx.shadowBlur = 10;
+                            matrixCtx.shadowBlur = 5;
                             matrixCtx.fillText(charObj.char, column.x, charY);
                             matrixCtx.shadowBlur = 0;
                         }
@@ -861,9 +873,9 @@
                 // Mover columna hacia abajo
                 column.y += column.speed;
                 
-                // Reiniciar columna cuando sale de pantalla
-                if (column.y > matrixCanvas.height + column.charCount * 25) {
-                    column.y = -column.charCount * 25;
+                // Reiniciar columna cuando sale de pantalla (con variación)
+                if (column.y > matrixCanvas.height + column.charCount * 12) {
+                    column.y = -column.charCount * 12 - Math.random() * matrixCanvas.height;
                     column.speed = Math.random() * 2 + 1;
                 }
             });
