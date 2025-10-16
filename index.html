@@ -38,8 +38,8 @@
         }
 
         .dog-gif {
-            width: 469px;
-            height: 469px;
+            width: 420px;
+            height: 420px;
             object-fit: cover;
             border-radius: 15px;
             border: 5px solid #FFA216;
@@ -51,6 +51,17 @@
         .dog-gif:hover {
             transform: translateY(-3px);
             box-shadow: 0 8px 25px rgba(255, 162, 22, 0.5);
+        }
+
+        .page-title {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 400;
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+            color: #FFA216;
+            transition: opacity 0.5s ease;
         }
 
         .initial-interface {
@@ -127,8 +138,8 @@
             border: none;
             background: #000000;
             border-radius: 0;
-            max-width: 100vw;
-            max-height: 100vh;
+            max-width: 95vw;
+            max-height: 95vh;
             width: auto;
             height: auto;
         }
@@ -147,9 +158,34 @@
             transition: all 0.3s ease;
             letter-spacing: 2px;
             box-shadow: 0 6px 20px rgba(255, 162, 22, 0.4);
+            animation: heartbeat 1.5s ease-in-out infinite;
+        }
+
+        @keyframes heartbeat {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 6px 20px rgba(255, 162, 22, 0.4);
+            }
+            25% {
+                transform: scale(1.05);
+                box-shadow: 0 8px 25px rgba(255, 162, 22, 0.6);
+            }
+            50% {
+                transform: scale(1.1);
+                box-shadow: 0 10px 30px rgba(255, 162, 22, 0.8);
+            }
+            75% {
+                transform: scale(1.05);
+                box-shadow: 0 8px 25px rgba(255, 162, 22, 0.6);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 6px 20px rgba(255, 162, 22, 0.4);
+            }
         }
 
         button:hover {
+            animation-play-state: paused;
             transform: translateY(-3px);
             box-shadow: 0 8px 25px rgba(255, 162, 22, 0.5);
         }
@@ -270,15 +306,20 @@
         /* Responsive */
         @media (max-width: 1024px) {
             #turtleCanvas {
-                max-width: 90vw;
-                max-height: 90vh;
+                max-width: 95vw;
+                max-height: 95vh;
             }
         }
 
         @media (max-width: 768px) {
+            .page-title {
+                font-size: 1.7rem;
+                margin-bottom: 15px;
+            }
+            
             .dog-gif {
-                width: 375px;
-                height: 375px;
+                width: 330px;
+                height: 330px;
                 margin-bottom: 5px;
             }
             
@@ -301,8 +342,8 @@
             }
             
             #turtleCanvas {
-                max-width: 95vw;
-                max-height: 70vh;
+                max-width: 98vw;
+                max-height: 75vh;
             }
             
             .smile-text {
@@ -318,9 +359,14 @@
         }
 
         @media (max-width: 480px) {
+            .page-title {
+                font-size: 1.4rem;
+                margin-bottom: 12px;
+            }
+            
             .dog-gif {
-                width: 300px;
-                height: 300px;
+                width: 260px;
+                height: 260px;
                 margin-bottom: 3px;
             }
             
@@ -344,7 +390,7 @@
             
             #turtleCanvas {
                 max-width: 98vw;
-                max-height: 60vh;
+                max-height: 65vh;
             }
             
             .smile-text {
@@ -360,9 +406,14 @@
         }
 
         @media (max-width: 320px) {
+            .page-title {
+                font-size: 1.2rem;
+                margin-bottom: 10px;
+            }
+            
             .dog-gif {
-                width: 244px;
-                height: 244px;
+                width: 210px;
+                height: 210px;
                 margin-bottom: 2px;
             }
             
@@ -376,8 +427,8 @@
             }
             
             #turtleCanvas {
-                max-width: 100vw;
-                max-height: 55vh;
+                max-width: 98vw;
+                max-height: 60vh;
             }
             
             .smile-text {
@@ -389,12 +440,13 @@
 <body onload="brython()">
     <!-- Interfaz inicial -->
     <div class="initial-interface" id="initialInterface">
+        <h1 class="page-title">Un girasol para ti 🌻</h1>
         <img src="assets/dog.gif" alt="Perro con girasol" class="dog-gif">
         
-        <button onclick="startDrawing()">Ver sorpresa 🌻</button>
+        <button onclick="startDrawing()">Abrir girasol</button>
         
         <div class="speed-control">
-            <div class="speed-label">Velocidad:</div>
+            <div class="speed-label">Velocidad de la flor:</div>
             <input type="range" class="speed-slider" id="speedSlider" min="1" max="10" value="5">
             <div class="speed-value" id="speedValue">5</div>
         </div>
@@ -403,9 +455,9 @@
     <!-- Interfaz de dibujo -->
     <div class="drawing-interface" id="drawingInterface">
         <div class="canvas-container">
-            <canvas id="turtleCanvas" width="1000" height="1000"></canvas>
+            <canvas id="turtleCanvas" width="1200" height="1200"></canvas>
         </div>
-        <div class="smile-text" id="smileText">para la flor más linda :)</div>
+        <div class="smile-text" id="smileText">porque sí, para ti :)</div>
     </div>
 
     <!-- Créditos -->
@@ -429,8 +481,8 @@
         # Canvas setup
         canvas = document['turtleCanvas']
         ctx = canvas.getContext('2d')
-        canvas_width = 1000
-        canvas_height = 1000
+        canvas_width = 1200
+        canvas_height = 1200
         
         # Turtle variables
         turtle_x = canvas_width // 2
@@ -464,8 +516,8 @@
             """Mueve la tortuga a una posición específica"""
             global turtle_x, turtle_y
             
-            # Escalar coordenadas para que la flor sea 50% más grande
-            scale_factor = min(canvas_width, canvas_height) / 133
+            # Escalar coordenadas para que la flor sea 100% más grande (50% adicional)
+            scale_factor = min(canvas_width, canvas_height) / 89
             scaled_x = canvas_width // 2 + x * scale_factor
             scaled_y = canvas_height // 2 - y * scale_factor
             
@@ -530,7 +582,7 @@
             
             # Dibujar semilla circular pequeña con borde negro para distinguir cada semilla
             ctx.beginPath()
-            ctx.arc(0, 0, 4, 0, 2 * math.pi)  # Círculo más grande (radio 4) para flor agrandada
+            ctx.arc(0, 0, 6, 0, 2 * math.pi)  # Círculo más grande (radio 6) para flor más grande
             
             # Relleno marrón
             ctx.fillStyle = '#8B4513'  # Marrón más claro para mejor visibilidad
@@ -558,8 +610,8 @@
                     return
                 
                 # Calcular posición usando espiral de Fibonacci y ángulo dorado
-                # Radio ajustado para mantener semillas en el centro de la flor agrandada
-                r = 0.47 * math.sqrt(current_seed)
+                # Radio ajustado para mantener semillas en el centro de la flor más grande
+                r = 0.31 * math.sqrt(current_seed)
                 theta = current_seed * 137.508 * (math.pi / 180)
                 x = r * math.cos(theta)
                 y = r * math.sin(theta)
@@ -681,12 +733,12 @@
             set_timeout(start_actual_drawing, 800)  # Esperar a que termine la transición
         
         def show_smile_text():
-            """Muestra el texto 'smile :)' con efecto de escritura letra por letra"""
+            """Muestra el texto con efecto de escritura letra por letra"""
             smile_element = document['smileText']
             smile_element.classList.add('visible')
             
             # Dividir el texto en letras
-            text = "para la flor más linda :)"
+            text = "porque sí, para ti :)"
             smile_element.innerHTML = ""
             
             for i, char in enumerate(text):
