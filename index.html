@@ -490,6 +490,9 @@
         turtle_heading = 0
         turtle_pen_down = True
         
+        # Escala global para el tamaño de la flor (aplicada a radios de circle())
+        circle_scale_multiplier = 2.0  # 2x para que la flor sea 100% más grande
+        
         def clear_canvas():
             """Limpia el canvas y lo pinta de negro"""
             ctx.clearRect(0, 0, canvas_width, canvas_height)
@@ -550,8 +553,9 @@
             # En turtle, circle() dibuja hacia la izquierda desde la dirección actual
             # El centro del círculo está a 90 grados a la izquierda de la tortuga
             center_angle = turtle_heading + 90
-            center_x = turtle_x + radius * math.cos(math.radians(center_angle))
-            center_y = turtle_y + radius * math.sin(math.radians(center_angle))
+            scaled_radius = radius * circle_scale_multiplier
+            center_x = turtle_x + scaled_radius * math.cos(math.radians(center_angle))
+            center_y = turtle_y + scaled_radius * math.sin(math.radians(center_angle))
             
             # Ángulo inicial desde el centro del círculo hasta la posición actual de la tortuga
             start_angle = math.radians(turtle_heading - 90)
@@ -559,12 +563,12 @@
             
             # Dibujar el arco
             ctx.beginPath()
-            ctx.arc(center_x, center_y, radius, start_angle, end_angle)
+            ctx.arc(center_x, center_y, scaled_radius, start_angle, end_angle)
             ctx.stroke()
             
             # Actualizar posición de la tortuga (turtle se mueve al final del arco)
-            turtle_x = center_x + radius * math.cos(end_angle)
-            turtle_y = center_y + radius * math.sin(end_angle)
+            turtle_x = center_x + scaled_radius * math.cos(end_angle)
+            turtle_y = center_y + scaled_radius * math.sin(end_angle)
             
             # Actualizar heading (turtle gira según el extent)
             turtle_heading += extent
