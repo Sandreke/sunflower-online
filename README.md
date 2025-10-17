@@ -2,7 +2,7 @@
 
 A beautiful, interactive sunflower drawing that brings Python's turtle graphics to the web using Brython.
 
-<img src="https://github.com/user-attachments/assets/fb4b10b3-5f33-47e8-8ad6-c93d5c05e3c9" width=75% height=75%>
+<img src="https://github.com/user-attachments/assets/feb9a8e4-be5f-4a32-a814-a2f1f24614b7" width=75% height=75%>
 
 ## ✨ Features
 
@@ -18,9 +18,9 @@ A beautiful, interactive sunflower drawing that brings Python's turtle graphics 
 ## 🎮 How to Use
 
 1. Set your preferred speed with the slider
-2. Click "DIBUJAR" to start the animation
+2. Click "ABRIR DIBUJO" to start the animation
 3. Watch the sunflower bloom in real-time
-4. Enjoy the "smile :)" message when complete! 😊
+4. Enjoy the message when complete! 😊
 
 ## 🛠️ Tech Stack
 
